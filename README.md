@@ -9,5 +9,5 @@
 *WEEK 2*
 1. 1st chapter of Reporting with R Markdown (Datacamp)
 2. week_2 task completed
->> * R crawler
->> * R markdown
+> * R crawler
+> * R markdown
