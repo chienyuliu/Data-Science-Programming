@@ -1,0 +1,26 @@
+---
+title: "Visualization"
+author: "Vivian Liu"
+output: html_document
+---
+
+## data: airquality
+
+Relationship between Month & Ozone:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+ggplot(data = airquality, mapping = aes(x = Temp, y = Ozone, color = Month))+
+  geom_point()+geom_smooth()
+```
+
+If we seperate it by month:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+ggplot(data = airquality, mapping = aes(x = Temp, y = Ozone, color = Month))+
+  geom_point()+geom_smooth()+
+  facet_wrap(~ Month, nrow = 3)
+```
