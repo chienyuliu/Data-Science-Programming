@@ -1,0 +1,92 @@
+---
+title: "Word Cloud☁"
+author: "Vivian Liu"
+output: html_document
+---
+##套件
+```{r setup, message=FALSE}
+library(Rfacebook)
+library(tm)
+library(SnowballC)
+library(wordcloud)
+library(RColorBrewer)
+library(NLP)
+library(jiebaRD)
+library(jiebaR)
+```
+
+##抓取粉專貼文
+FB粉專:[Rainbow Shop](https://www.facebook.com/rainbowshop.fans/)
+
+於網路販售女裝/女鞋/包包配件等
+
+```{r }
+token <- "EAACEdEose0cBAJurR52RORq2S2KWVd3VT32BWMK2Lu5X446RxZBmGux1AZAuyatwWxJckBs73yAbSYh8My9ZAZAzsInJQcKUteyL7IUFARdIKJ9jKh8sMA2tek5t7ZCSRvMheIhV7NpNBN3q576mGyv5swPZAYfwWPqOgFooY6B5XH7eX8EbojRbmeUe4X0E138RKMAKUvlAZDZD"
+page.id <- "355196511355"
+page <- getPage(page.id, token, n = 300)
+```
+
+##文本清理+文字雲製作
+
+```{r }
+docs <- Corpus(VectorSource(page$message))
+toSpace <- content_transformer(function(x, pattern) {
+  return (gsub(pattern, " ", x))})
+
+docs <- tm_map(docs, toSpace, "我們")
+docs <- tm_map(docs, toSpace, "囉")
+docs <- tm_map(docs, toSpace, "的")
+docs <- tm_map(docs, toSpace, "還")
+docs <- tm_map(docs, toSpace, "小編")
+docs <- tm_map(docs, toSpace, "啊")
+docs <- tm_map(docs, toSpace, "個")
+docs <- tm_map(docs, toSpace, "太")
+docs <- tm_map(docs, toSpace, "有")
+docs <- tm_map(docs, toSpace, "了")
+docs <- tm_map(docs, toSpace, "是")
+docs <- tm_map(docs, toSpace, "很")
+docs <- tm_map(docs, toSpace, "都")
+docs <- tm_map(docs, toSpace, "在")
+docs <- tm_map(docs, toSpace, "和")
+docs <- tm_map(docs, toSpace, "這")
+docs <- tm_map(docs, toSpace, "讓")
+docs <- tm_map(docs, toSpace, "跟")
+docs <- tm_map(docs, toSpace, "就")
+docs <- tm_map(docs, toSpace, "真")
+docs <- tm_map(docs, toSpace, "上")
+docs <- tm_map(docs, toSpace, "下")
+docs <- tm_map(docs, toSpace, "啦")
+docs <- tm_map(docs, toSpace, "不")
+docs <- tm_map(docs, toSpace, "它")
+docs <- tm_map(docs, toSpace, "但")
+docs <- tm_map(docs, toSpace, "又")
+docs <- tm_map(docs, toSpace, "妳")
+docs <- tm_map(docs, toSpace, "你")
+docs <- tm_map(docs, toSpace, "喔")
+docs <- tm_map(docs, toSpace, "哦")
+docs <- tm_map(docs, toSpace, "吧")
+docs <- tm_map(docs, toSpace, "可以")
+docs <- tm_map(docs, toSpace, "穿")
+docs <- tm_map(docs, toSpace, "來")
+docs <- tm_map(docs, toSpace, "再")
+
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, stripWhitespace)
+
+mixseg = worker()
+jieba_tokenizer=function(d){
+  unlist(segment(d[[1]],mixseg))
+}
+seg = lapply(docs, jieba_tokenizer)
+freqFrame = as.data.frame(table(unlist(seg)))
+freqFrame = freqFrame[-c(1:34),]
+wordcloud(freqFrame$Var1,freqFrame$Freq,
+          scale=c(5,0.2),min.freq=5,max.words=50,
+          random.order=FALSE, random.color=TRUE, 
+          rot.per=0, colors=rainbow(length(row.names(freqFrame))),
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE)
+```
+
+###粉絲專頁是用來社群行銷的工具，我們可以看到常用來吸引顧客的字眼有全館免運、現貨、滿額、送、折價等等，此外必備、側拍、限時、搭配等等也是宣傳商品時好用的詞彙。
