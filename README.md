@@ -19,3 +19,9 @@
 3. ggplot2: [R for Data Science's tutorial](http://r4ds.had.co.nz/data-visualisation.html)
 4. [R筆記–(4)繪圖-資料視覺化](https://rpubs.com/skydome20/R-Note4-Plotting_System)
 5. week_3 task completed
+
+*WEEK 4*
+1. Facebook API，使用R擷取FB粉專資料
+2. [R Leaflet Map Visualization](https://blog.gtwang.org/r/r-leaflet-interactive-map-package-tutorial/)
+3. Word Cloud☁:[5 simple steps](http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know)
+4. week_4 task completed
