@@ -1,0 +1,113 @@
+---
+title: "TF-IDF"
+author: "Vivian Liu"
+output: html_document
+---
+#分析神鬼奇航三部曲
+#(The Curse of the Black Pearl/Dead Man's Chest/At the World's End)
+
+##STEP 1 載入所需套件
+
+```{r ,message=FALSE}
+library(readtext)
+library(NLP)
+library(tm)
+library(SnowballC)
+library(magrittr)
+library(slam)
+library(Matrix)
+library(dplyr)
+library(ggplot2)
+library(tidytext)
+library(RColorBrewer)
+library(wordcloud)
+library(jiebaRD)
+library(jiebaR)
+```
+
+##STEP 2 匯入檔案
+
+```{r }
+doc1 <- readtext("C:\\Users\\user\\Downloads\\The_Curse_of_the_Black_Pearl-Irene_Trimble.txt")
+doc2 <- readtext("C:\\Users\\user\\Downloads\\Dead_Mans_Chest-Irene_Trimble.txt")
+doc3 <- readtext("C:\\Users\\user\\Downloads\\At_the_Worlds_End-Irene_Trimble.txt")
+docAll <- data.frame(doc1,doc2,doc3)
+```
+
+##STEP 3 文本清理
+
+```{r}
+docs <- Corpus(VectorSource(docAll))
+toSpace <- content_transformer(function(x, pattern) {
+  return (gsub(pattern, " ", x))})
+docs <- tm_map(docs,stripWhitespace)
+docs <- tm_map(docs,removeNumbers)
+docs <- tm_map(docs,removePunctuation)
+docs <- tm_map(docs,tolower)
+docs <- tm_map(docs,removeWords,stopwords("english"))
+```
+
+##STEP 4 tf-idf 計算
+
+```{r}
+tdm <- TermDocumentMatrix(docs, control = list(wordLengths = c(1, Inf)))
+tf <- apply(tdm[,c(2,4,6)], 2, sum)
+idfFun <- function(word_doc){ log2( (3) / nnzero(word_doc) ) }
+idf <- apply(tdm[,c(2,4,6)], 1, idfFun)
+doc.tfidf <- as.matrix(tdm[,c(2,4,6)])
+for(i in 1:nrow(tdm)){
+  for(j in 1:ncol(doc.tfidf)){
+    doc.tfidf[i,j] <- (doc.tfidf[i,j] / tf[j]) * idf[i]
+  }
+}
+```
+
+##STEP 5 視覺化
+
+###Ⅰ. The Curse of the Black Pearl
+
+```{r}
+m1 <- as.matrix(doc.tfidf[,1])
+v <- sort(rowSums(m1), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+#用文字雲看出現最多的詞彙
+wordcloud(d$word, d$freq, max.words=50, random.order = F, ordered.colors = F, 
+          colors = rainbow(length(row.names(m1))))
+#畫出前十名 
+ggplot(d[1:10,], aes(x= word,y= freq)) +
+  geom_bar(stat = "identity")
+```
+
+###Ⅱ. Dead Man's Chest
+
+```{r}
+m1 <- as.matrix(doc.tfidf[,2])
+v <- sort(rowSums(m1), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+#用文字雲看出現最多的詞彙
+wordcloud(d$word, d$freq, max.words=50, random.order = F, ordered.colors = F, 
+          colors = rainbow(length(row.names(m1))))
+#畫出前十名 
+ggplot(d[1:10,], aes(x= word,y= freq)) +
+  geom_bar(stat = "identity")
+```
+
+###Ⅲ. At the World's End
+
+```{r}
+m1 <- as.matrix(doc.tfidf[,3])
+v <- sort(rowSums(m1), decreasing = TRUE)
+d <- data.frame(word = names(v), freq = v)
+#用文字雲看出現最多的詞彙
+wordcloud(d$word, d$freq, max.words=50, random.order = F, ordered.colors = F, 
+          colors = rainbow(length(row.names(m1))))
+#畫出前十名 
+ggplot(d[1:10,], aes(x= word,y= freq)) +
+  geom_bar(stat = "identity")
+```
+
+###<小結>
+###三個結果都各自呈現該集最重要的關鍵字，鐵三角(Jack、Will、Elizabeth)因為是整個故事的主要角色因此被過濾掉，值得一提的我原本以為Barbossa船長屬於電影主要人物也會被過濾掉，結果他因為第一集死掉第三集復活回歸，因此他的名字在一、三集就變得很重要，我們從前十名的詞彙還可以看出與當集劇情最相關的人、事、物:
+###第一名的金幣(medallion)是第一集大家爭相搶奪的寶物，兩艘主要船艦的名字(Interceptor & Dauntless)和藏寶的洞穴(cave)一併出現在前十名，足以猜想第一集許多故事場景大多發生在這些地點。
+###第二集的劇情是一群人找尋Davy Jones的心臟，可以發現這故事的核心詞是chest & key，此外沒想到威爾的爸爸(Bootstrap)也是這個故事不可或缺的人物。
+###第三集的結果出現了許多新的角色，像是海神Calypso和由周潤發飾演的角色Sao Feng都成為這集重要的關鍵字，另外還有推動劇情的Brethren Court也在前十名之列。
