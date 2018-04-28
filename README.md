@@ -25,3 +25,12 @@
 2. [R Leaflet Map Visualization](https://blog.gtwang.org/r/r-leaflet-interactive-map-package-tutorial/)
 3. Word Cloud☁:[5 simple steps](http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know)
 4. week_4 task completed
+
+*WEEK 5*
+1. EDA
+2. TF-IDF
+> * http://rstudio-pubs-static.s3.amazonaws.com/12422_b2b48bb2da7942acaca5ace45bd8c60c.html
+> * https://www.tidytextmining.com/tfidf.html#a-corpus-of-physics-texts
+> * http://mropengate.blogspot.tw/2016/04/tf-idf-in-r-language.html
+> * http://rstudio-pubs-static.s3.amazonaws.com/12422_b2b48bb2da7942acaca5ace45bd8c60c.html
+3. [week_5 task](https://github.com/chienyuliu/Data-Science-Programming/tree/master/week_5)
