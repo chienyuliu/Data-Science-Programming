@@ -2,7 +2,7 @@
 
 ## 劉千瑜 工管三
 
-project 1: https://docs.google.com/presentation/d/1VWUVwEL3ItNMLSffdv3-53xGA-xP0vYW7hlBx3MF0u8/edit#slide=id.p
+project : https://docs.google.com/presentation/d/1VWUVwEL3ItNMLSffdv3-53xGA-xP0vYW7hlBx3MF0u8/edit#slide=id.p
 
 *WEEK 1*
 1. Introduction to R (Datacamp)
